@@ -13,30 +13,6 @@ public class WordCounter {
     private int numberOfWords;
     private int numberOfEnglishWords;
 
-    public Set<String> getEnglishWordsUsed() {
-        return englishWordsUsed;
-    }
-
-    public int getNumberOfConstants() {
-        return numberOfConstants;
-    }
-
-    public int getNumberOfVowels() {
-        return numberOfVowels;
-    }
-
-    public int getNumberOfLines() {
-        return numberOfLines;
-    }
-
-    public int getNumberOfWords() {
-        return numberOfWords;
-    }
-
-    public int getNumberOfEnglishWords() {
-        return numberOfEnglishWords;
-    }
-
     public WordCounter() {
         englishWordsUsed = new HashSet<>();
         numberOfConstants = 0;
