@@ -29,10 +29,23 @@ public class WordCounter {
             return;
         }
 
+        System.out.println(Arrays.toString(array));
+
+//        String[] regexArray = {"'s$|s'$", "[^a-zA-Z -]", "^[-]|[-]$"};
+        List<String> s = Arrays.asList(
+                                "'s$|s'$",
+                                "[^a-zA-Z -]",
+                                "^[-]|[-]$"
+                    );
+
         for (int i = 0; i < arrayLength; i++) {
-            array[i] = array[i].replaceAll("'s$|s'$", "");
-            array[i] = array[i].replaceAll("[^a-zA-Z -]", "");
-            array[i] = array[i].replaceAll("^[-]|[-]$", "");
+
+            for (String L : s) {
+
+                array[i] = array[i].replaceAll(L, "");
+
+            }
+
         }
 
         numberOfWords += arrayLength;
@@ -40,6 +53,7 @@ public class WordCounter {
 
         for (final String word : array) {
             if (!word.equals("")) {
+
                 final File words = new File("src/com/company/words/english");
                 final String[] paths = words.list();
                 final String[] splittedWord = word.split("-");
@@ -48,6 +62,7 @@ public class WordCounter {
                     englishWordsUsed.add(word);
                     numberOfEnglishWords++;
                 }
+
             }
         }
 
