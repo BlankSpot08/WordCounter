@@ -13,6 +13,30 @@ public class WordCounter {
     private int numberOfWords;
     private int numberOfEnglishWords;
 
+    public Set<String> getEnglishWordsUsed() {
+        return englishWordsUsed;
+    }
+
+    public int getNumberOfConstants() {
+        return numberOfConstants;
+    }
+
+    public int getNumberOfVowels() {
+        return numberOfVowels;
+    }
+
+    public int getNumberOfLines() {
+        return numberOfLines;
+    }
+
+    public int getNumberOfWords() {
+        return numberOfWords;
+    }
+
+    public int getNumberOfEnglishWords() {
+        return numberOfEnglishWords;
+    }
+
     public WordCounter() {
         englishWordsUsed = new HashSet<>();
         numberOfConstants = 0;
@@ -22,7 +46,6 @@ public class WordCounter {
     }
 
     public void count(String line) {
-//        String[] array = line.replaceAll("[^a-zA-Z -]", "").toLowerCase().split(" ");
         String[] array = line.toLowerCase().split(" ");
         final int arrayLength = array.length;
 
@@ -31,77 +54,111 @@ public class WordCounter {
         }
 
         for (int i = 0; i < arrayLength; i++) {
-            List<String> asList = Arrays.asList("[^a-zA-Z -]", "^[-]|[-]$");
-            for (String s : asList) {
-                array[i] = array[i].replaceAll(s, "");
-            }
+            array[i] = array[i].replaceAll("'s$|s'$", "");
+            array[i] = array[i].replaceAll("[^a-zA-Z -]", "");
+            array[i] = array[i].replaceAll("^[-]|[-]$", "");
         }
 
         numberOfWords += arrayLength;
         numberOfLines++;
 
-//        System.out.println(Arrays.toString(array));
+        for (final String word : array) {
+            if (!word.equals("")) {
+                final File words = new File("src/com/company/words/english");
+                final String[] paths = words.list();
+                final String[] splittedWord = word.split("-");
 
-        for (int i = 0; i < arrayLength; i++) {
-            if (!array[i].equals("")) {
-//                System.out.println(array[i]);
-
-                File words = new File("src/com/company/words/english");
-                String[] paths = words.list();
-
-                String indexPath = null;
-
-                final int pathLength = paths.length;
-                for (int j = 0; j < pathLength; j++) {
-                    String s = paths[j];
-                    final char temp = array[i].charAt(0);
-
-                    final String path = s.toLowerCase();
-                    final char firstLetter = path.charAt(0);
-                    final char secondLetter = path.charAt(4);
-
-                    if (temp >= firstLetter && temp <= secondLetter) {
-                        indexPath = words.getPath() + "\\" + s;
-
-                        break;
-                    }
-                }
-
-                try {
-                    File fileIndex = new File(indexPath);
-                    Scanner scanner = new Scanner(fileIndex);
-
-                    while (scanner.hasNextLine()) {
-                        String scannerLine = scanner.nextLine();
-                        if (scannerLine.contains(array[i])) {
-                            System.out.println("Scanner Line: " + scannerLine);
-                            System.out.println("Array[i]: " + array[i]);
-                            englishWordsUsed.add(array[i]);
-                            numberOfEnglishWords++;
-                            break;
-                        }
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                if (testing(splittedWord, paths, words)) {
+                    englishWordsUsed.add(word);
+                    numberOfEnglishWords++;
                 }
             }
         }
 
-//        numberOfEnglishWords = englishWordsUsed.size();
+        for (String word : array) {
+            final int wordLength = word.length();
+            for (int j = 0; j < wordLength; j++) {
+                final char letter = word.charAt(j);
+
+                if (letter == 'a'
+                        || letter == 'e'
+                        || letter == 'i'
+                        || letter == 'o'
+                        || letter == 'u') {
+                    numberOfVowels++;
+                } else {
+                    numberOfConstants++;
+                }
+            }
+        }
+
     }
 
-    public String toString() {
-        String temp = "";
+    private boolean testing(String[] splittedWord, String[] paths, File words)  {
+        try {
+            for (String word : splittedWord) {
+                final String temp = getDictionaryIndex(paths, word);
+                final String fileIndexPath = words.getPath() + "\\" + temp;
 
-        temp = "Number of Lines: " + numberOfLines + "\n" +
-                "Number of Words: " + numberOfWords + "\n" +
-                "Number of Vowels: " + numberOfVowels + "\n" +
-                "Number of Constants: " + numberOfConstants + "\n" +
-                "Number of English Words: " + numberOfEnglishWords;
+                final File fileIndex = new File(fileIndexPath);
+                final Scanner scanner = new Scanner(fileIndex);
 
-        System.out.println(Arrays.toString(englishWordsUsed.toArray()));
+                if (!isEnglishWord(scanner, word)) {
+                    scanner.close();
+                    return false;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        return temp;
+        return true;
+    }
+
+    private boolean isEnglishWord(Scanner scanner, String word) {
+        while (scanner.hasNextLine()) {
+
+            final String scannerLine = scanner.nextLine();
+            if (scannerLine.equals(word)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private String getDictionaryIndex(String[] paths, String word) {
+        for (String path : paths) {
+            final char firstLetterOfWord = word.charAt(0);
+
+            final String temp = path.toLowerCase();
+            final char firstLetter = temp.charAt(0);
+            final char secondLetter = temp.charAt(4);
+
+            if (firstLetterOfWord >= firstLetter && firstLetterOfWord <= secondLetter) {
+                return path;
+            }
+        }
+
+        return null;
+    }
+
+    final public String toString() {
+        final StringBuilder temp = new StringBuilder();
+
+        temp.append("Number of Lines: ").append(numberOfLines).append("\n")
+                .append("Number of Words: ").append(numberOfWords).append("\n")
+                .append("Number of Vowels: ").append(numberOfVowels).append("\n")
+                .append("Number of Constants: ").append(numberOfConstants).append("\n")
+                .append("Number of English Words: ").append(numberOfEnglishWords).append("\n\n\n\n")
+                .append("English Words: \n");
+
+        String[] englistWordsUsedArray = englishWordsUsed.toArray(String[]::new);
+        for (String word : englistWordsUsedArray) {
+            temp.append(word).append("\n");
+        }
+
+        return temp.toString();
     }
 }
 

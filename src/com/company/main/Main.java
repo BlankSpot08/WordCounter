@@ -2,30 +2,34 @@ package com.company.main;
 
 import com.company.app.WordCounter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Main {
     public void start() {
-        File file = new File("inputs/Python.txt");
+        final File inputFile = new File("inputs/Python.txt");
 
-        WordCounter wordCounter = new WordCounter();
+        final WordCounter wordCounter = new WordCounter();
+        final Scanner scanner;
 
-        Scanner scanner;
         try {
-            scanner = new Scanner(file);
+            scanner = new Scanner(inputFile);
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-//                System.out.println(line);
                 wordCounter.count(line);
             }
 
-        } catch (FileNotFoundException e) {
+            final OutputStream outputFile = new FileOutputStream("outputs/result.txt");
+
+            final String outputString = wordCounter.toString();
+            final byte[] outputByte =  outputString.getBytes(StandardCharsets.UTF_8);
+
+            outputFile.write(outputByte);
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println(wordCounter.toString());
     }
 }
