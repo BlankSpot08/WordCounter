@@ -1,23 +1,20 @@
 package com.company.app;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class WordCounter {
-    public final Set<String> wordsUsed;
+    public final Set<String> englishWordsUsed;
 
     private int numberOfConstants;
     private int numberOfVowels;
     private int numberOfLines;
     private int numberOfWords;
+    private int numberOfEnglishWords;
 
     public WordCounter() {
-        wordsUsed = new HashSet<>();
+        englishWordsUsed = new HashSet<>();
         numberOfConstants = 0;
         numberOfVowels = 0;
         numberOfLines = 0;
@@ -25,65 +22,72 @@ public class WordCounter {
     }
 
     public void count(String line) {
-        String[] array = line.replaceAll("[^a-zA-Z -]", "").toLowerCase().split(" ");
-
+//        String[] array = line.replaceAll("[^a-zA-Z -]", "").toLowerCase().split(" ");
+        String[] array = line.toLowerCase().split(" ");
         final int arrayLength = array.length;
 
-//        System.out.println(Arrays.toString(array));
         if (arrayLength <= 1) {
             return;
         }
 
         for (int i = 0; i < arrayLength; i++) {
+            List<String> asList = Arrays.asList("[^a-zA-Z -]", "^[-]|[-]$");
+            for (String s : asList) {
+                array[i] = array[i].replaceAll(s, "");
+            }
+        }
+
+        numberOfWords += arrayLength;
+        numberOfLines++;
+
+//        System.out.println(Arrays.toString(array));
+
+        for (int i = 0; i < arrayLength; i++) {
             if (!array[i].equals("")) {
-                System.out.println(array[i]);
+//                System.out.println(array[i]);
+
                 File words = new File("src/com/company/words/english");
                 String[] paths = words.list();
 
+                String indexPath = null;
+
                 final int pathLength = paths.length;
                 for (int j = 0; j < pathLength; j++) {
+                    String s = paths[j];
                     final char temp = array[i].charAt(0);
 
-                    final String path = paths[j].toLowerCase();
+                    final String path = s.toLowerCase();
                     final char firstLetter = path.charAt(0);
                     final char secondLetter = path.charAt(4);
 
                     if (temp >= firstLetter && temp <= secondLetter) {
-
-                        File fileIndex = new File(words.getPath() + "\\" + paths[j]);
-
-                        try {
-                            Scanner scanner = new Scanner(fileIndex);
-
-                            while (scanner.hasNextLine()) {
-                                if (array[i].equals(scanner.nextLine())) {
-
-                                    if (array[i].startsWith("a")
-                                            || array[i].startsWith("e")
-                                            || array[i].startsWith("i")
-                                            || array[i].startsWith("o")
-                                            || array[i].startsWith("u")) {
-                                        numberOfVowels++;
-                                    }
-                                    else {
-                                        numberOfConstants++;
-                                    }
-                                    break;
-                                }
-                            }
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
+                        indexPath = words.getPath() + "\\" + s;
 
                         break;
                     }
                 }
-                wordsUsed.add(array[i]);
-            }
 
+                try {
+                    File fileIndex = new File(indexPath);
+                    Scanner scanner = new Scanner(fileIndex);
+
+                    while (scanner.hasNextLine()) {
+                        String scannerLine = scanner.nextLine();
+                        if (scannerLine.contains(array[i])) {
+                            System.out.println("Scanner Line: " + scannerLine);
+                            System.out.println("Array[i]: " + array[i]);
+                            englishWordsUsed.add(array[i]);
+                            numberOfEnglishWords++;
+                            break;
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
-        numberOfLines++;
+//        numberOfEnglishWords = englishWordsUsed.size();
     }
 
     public String toString() {
@@ -92,9 +96,10 @@ public class WordCounter {
         temp = "Number of Lines: " + numberOfLines + "\n" +
                 "Number of Words: " + numberOfWords + "\n" +
                 "Number of Vowels: " + numberOfVowels + "\n" +
-                "Number of Constants: " + numberOfConstants;
+                "Number of Constants: " + numberOfConstants + "\n" +
+                "Number of English Words: " + numberOfEnglishWords;
 
-        System.out.println(Arrays.toString(wordsUsed.toArray()));
+        System.out.println(Arrays.toString(englishWordsUsed.toArray()));
 
         return temp;
     }
