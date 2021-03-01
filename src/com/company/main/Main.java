@@ -1,7 +1,6 @@
 package com.company.main;
 
 import com.company.app.WordCounter;
-import com.company.app.WordCounter1;
 import com.company.languages.English;
 import com.company.languages.Language;
 import com.company.languages.Tagalog;
@@ -25,19 +24,19 @@ public class Main {
         final File languageFileIndex;
 
         String languageFileIndexPath = "src/com/company/words/";
-        if (languageCode.equals("-e")) {
+        if (languageCode.equalsIgnoreCase("-e")) {
             languageFileIndex = new File(languageFileIndexPath + "english");
             language = new English(languageFileIndex);
         }
 
-        else if (languageCode.equals("-f")) {
+        else if (languageCode.equalsIgnoreCase("-f")) {
             languageFileIndex = new File(languageFileIndexPath + "tagalog");
             language = new Tagalog(languageFileIndex);
         }
 
 
 //        final WordCounter wordCounter = new WordCounter();
-        final WordCounter1 wordCounter = new WordCounter1(language);
+        final WordCounter wordCounter = new WordCounter(language);
         final Scanner scanner;
 
         try {

@@ -2,19 +2,55 @@ Number of Lines: 35
 Number of Words: 306
 Number of Vowels: 959
 Number of Constants: 594
-Number of Tagalog Words: 24
+Number of Tagalog Words: 82
 
 
 
 Tagalog Used: 
-ulap
 dahil
-at
-bituin
+piliin
 ako
-ay
+pangarap
+mga
+pero
 din
 araw
-buwan
+sakit
+langit
+isipan
+sa
+mahalin
+gabi
+bituin
+para
+puso
+ka
+pag
 ang
+lang
+malaman
+pigilan
+tandaan
+palagi
+mo
+hanap
+ko
+liwanag
+lagi
+mundo
+ikaw
+buwan
+hirap
+it
+ulap
+pa
+at
+na
+sana
+ay
+hindi
+ng
+kilig
 dahilan
+masakit
+iyon
