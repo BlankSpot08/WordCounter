@@ -15,15 +15,15 @@ public class WordCounter {
 
     public void count(String line) {
         String[] array = line.toLowerCase().split(" ");
-        final int arrayLength = array.length;
 
+        final int arrayLength = array.length;
         if (arrayLength <= 1) {
             return;
         }
 
-//        final Language language = this.language;
+        final Language language = this.language;
 
-        String[] regexs = {
+        final String[] regexs = {
                 "'s$|s'$",
                 "[^a-zA-Z -]",
                 "^[-]|[-]$"
@@ -34,8 +34,6 @@ public class WordCounter {
                 array[i] = array[i].replaceAll(regex, "");
             }
         }
-
-        System.out.println(Arrays.toString(array));
 
         language.setNumberOfWords(language.getNumberOfWords() + arrayLength);
         language.setNumberOfLines(language.getNumberOfLines() + 1);
