@@ -1,0 +1,20 @@
+Number of Lines: 35
+Number of Words: 306
+Number of Vowels: 959
+Number of Constants: 594
+Number of Tagalog Words: 24
+
+
+
+Tagalog Used: 
+ulap
+dahil
+at
+bituin
+ako
+ay
+din
+araw
+buwan
+ang
+dahilan

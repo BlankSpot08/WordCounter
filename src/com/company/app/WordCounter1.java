@@ -1,24 +1,16 @@
 package com.company.app;
 
+import com.company.languages.Language;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class WordCounter {
-    public final Set<String> englishWordsUsed;
+public class WordCounter1 {
+    private final Language language;
 
-    private int numberOfConstants;
-    private int numberOfVowels;
-    private int numberOfLines;
-    private int numberOfWords;
-    private int numberOfEnglishWords;
-
-    public WordCounter() {
-        englishWordsUsed = new HashSet<>();
-        numberOfConstants = 0;
-        numberOfVowels = 0;
-        numberOfLines = 0;
-        numberOfWords = 0;
+    public WordCounter1(Language language) {
+        this.language = language;
     }
 
     public void count(String line) {
@@ -28,6 +20,8 @@ public class WordCounter {
         if (arrayLength <= 1) {
             return;
         }
+
+//        Language language = this.language;
 
         String[] regexs = {
                 "'s$|s'$",
@@ -42,19 +36,19 @@ public class WordCounter {
 
         }
 
-        numberOfWords += arrayLength;
-        numberOfLines++;
+        language.setNumberOfWords(language.getNumberOfWords() + arrayLength);
+        language.setNumberOfLines(language.getNumberOfLines() + 1);
 
         for (final String word : array) {
             if (!word.equals("")) {
 
-                final File words = new File("src/com/company/words/english");
+                final File words = language.getLanguageFileIndex();
                 final String[] paths = words.list();
                 final String[] splittedWord = word.split("-");
 
                 if (testing(splittedWord, paths, words)) {
-                    englishWordsUsed.add(word);
-                    numberOfEnglishWords++;
+                    language.getLanguageWordsUsed().add(word);
+                    language.setNumberOfLanguageWords(language.getNumberOfLanguageWords() + 1);
                 }
 
             }
@@ -62,17 +56,21 @@ public class WordCounter {
 
         for (String word : array) {
             final int wordLength = word.length();
-            for (int j = 0; j < wordLength; j++) {
-                final char letter = word.charAt(j);
+            for (int i = 0; i < wordLength; i++) {
+                final char letter = word.charAt(i);
 
-                if (letter == 'a'
-                        || letter == 'e'
-                        || letter == 'i'
-                        || letter == 'o'
-                        || letter == 'u') {
-                    numberOfVowels++;
-                } else {
-                    numberOfConstants++;
+                final int tempNumberOfVowels = language.getNumberOfVowels();
+
+                char[] vowels = language.getVowels();
+                for (char vowel : vowels) {
+                    if (vowel == letter) {
+                        language.setNumberOfVowels(language.getNumberOfVowels() + 1);
+                        break;
+                    }
+                }
+
+                if (language.getNumberOfVowels() == tempNumberOfVowels) {
+                    language.setNumberOfConsonants(language.getNumberOfConsonants() + 1);
                 }
             }
         }
@@ -88,7 +86,7 @@ public class WordCounter {
                 final File fileIndex = new File(fileIndexPath);
                 final Scanner scanner = new Scanner(fileIndex);
 
-                if (!isEnglishWord(scanner, word)) {
+                if (!isLanguageWord(scanner, word)) {
                     scanner.close();
                     return false;
                 }
@@ -100,7 +98,7 @@ public class WordCounter {
         return true;
     }
 
-    private boolean isEnglishWord(Scanner scanner, String word) {
+    private boolean isLanguageWord(Scanner scanner, String word) {
         while (scanner.hasNextLine()) {
 
             final String scannerLine = scanner.nextLine();
@@ -131,15 +129,15 @@ public class WordCounter {
     final public String toString() {
         final StringBuilder temp = new StringBuilder();
 
-        temp.append("Number of Lines: ").append(numberOfLines).append("\n")
-                .append("Number of Words: ").append(numberOfWords).append("\n")
-                .append("Number of Vowels: ").append(numberOfVowels).append("\n")
-                .append("Number of Constants: ").append(numberOfConstants).append("\n")
-                .append("Number of English Words: ").append(numberOfEnglishWords).append("\n\n\n\n")
-                .append("English Words: \n");
+        temp.append("Number of Lines: ").append(language.getNumberOfLines()).append("\n")
+                .append("Number of Words: ").append(language.getNumberOfWords()).append("\n")
+                .append("Number of Vowels: ").append(language.getNumberOfVowels()).append("\n")
+                .append("Number of Constants: ").append(language.getNumberOfConsonants()).append("\n")
+                .append("Number of ").append(language.getName()).append(" Words: ").append(language.getNumberOfLanguageWords()).append("\n\n\n\n")
+                .append(language.getName()).append(" Used: \n");
 
-        String[] englistWordsUsedArray = englishWordsUsed.toArray(String[]::new);
-        for (String word : englistWordsUsedArray) {
+        String[] englishWordsUsedArray = language.getLanguageWordsUsed().toArray(String[]::new);
+        for (String word : englishWordsUsedArray) {
             temp.append(word).append("\n");
         }
 
