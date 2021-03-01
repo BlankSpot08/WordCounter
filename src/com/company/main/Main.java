@@ -12,7 +12,6 @@ import java.util.Scanner;
 
 public class Main {
     public void start(String[] command) {
-        System.out.println(Arrays.toString(command));
         final String languageCode = command[0];
         final String inputUrl = command[1];
         final String outputUrl = command[3];

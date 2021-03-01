@@ -45,7 +45,6 @@ public class WordCounter {
                 final String[] splittedWord = word.split("-");
 
                 if (searchingWord(splittedWord, paths, words)) {
-                    System.out.println(word);
                     language.getLanguageWordsUsed().add(word);
                     language.setNumberOfLanguageWords(language.getNumberOfLanguageWords() + 1);
                 }
@@ -127,6 +126,7 @@ public class WordCounter {
     final public String toString() {
         final StringBuilder temp = new StringBuilder();
 
+        final Language language = this.language;
         temp.append("Number of Lines: ").append(language.getNumberOfLines()).append("\n")
                 .append("Number of Words: ").append(language.getNumberOfWords()).append("\n")
                 .append("Number of Vowels: ").append(language.getNumberOfVowels()).append("\n")
