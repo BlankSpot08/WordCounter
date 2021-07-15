@@ -1,4 +1,5 @@
 # WordCounter
+Status: Finished
 
 A common word counter is program that creates a numerical count of the number of words in a document, file, or string of text. This program howwever is a bit different as it has more features.
 
